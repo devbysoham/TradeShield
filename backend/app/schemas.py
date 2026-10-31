@@ -66,3 +66,13 @@ class ContractIntegrityRequest(BaseModel):
 # Exporter / Importer Workspace
 class WorkspaceRequest(BaseModel):
     role: Literal["exporter", "importer"]
+
+
+# Compliance Norms (DGFT / ICEGATE / FEMA / FTA)
+class ComplianceCheckRequest(BaseModel):
+    trade_type: Literal["export", "import"] = "export"
+    partner_country: str
+    product_category: Optional[str] = None
+    hs_code: Optional[str] = None
+    declared_value_usd: float = Field(default=100000.0, gt=0)
+    shipping_bill_date: Optional[str] = None

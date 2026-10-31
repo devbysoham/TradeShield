@@ -41,6 +41,13 @@ const navItems = [
     badge: 'React Flow',
     badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
   },
+  {
+    name: 'Compliance Norms',
+    href: '/compliance',
+    icon: ShieldAlert,
+    badge: 'Scraped',
+    badgeColor: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  },
 ];
 
 export default function Sidebar() {

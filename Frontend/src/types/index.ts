@@ -162,3 +162,158 @@ export interface AuditActivity {
   hashVerification: string;
 }
 
+// ---------------------------------------------------------------------------
+// Trade Compliance Norms (DGFT / ICEGATE / FEMA / FTA)
+// ---------------------------------------------------------------------------
+
+export type ComplianceSeverity = 'high' | 'medium' | 'warning' | 'info';
+
+export interface ComplianceNotification {
+  notification_no: string;
+  date: string;
+  title: string;
+  schedule: string;
+  impact: string;
+  status: string;
+  severity: ComplianceSeverity;
+}
+
+export interface FtaDetail {
+  country: string;
+  fta_name: string;
+  status: string;
+  preferential_rate_pct: number;
+  standard_bcd_pct: number;
+  rules_of_origin: string[];
+  coo_type: string;
+  key_sectors: string[];
+  official_link: string;
+}
+
+export interface CompliancePortal {
+  name: string;
+  url: string;
+  authority: string;
+  description: string;
+  badge: string;
+}
+
+export interface FemaRules {
+  realization_deadline_months: number;
+  statutory_framework: string;
+  edpms_system: string;
+  authorized_dealers: string;
+  lut_provision: string;
+  ebrc?: string;
+}
+
+export interface ComplianceOverview {
+  master_policy: string;
+  scraped_at: string | null;
+  source: string | null;
+  governing_bodies: string[];
+  top_export_destinations: string[];
+  top_import_sources: string[];
+  top_export_commodities: string[];
+  top_import_commodities: string[];
+  trading_partners_count: number;
+  active_ftas_count: number;
+  commodity_codes_count: number;
+  other_fta_partners: string[];
+  recent_notifications: ComplianceNotification[];
+  ftas: FtaDetail[];
+  product_categories: string[];
+  portals: CompliancePortal[];
+  fema_rules: FemaRules;
+}
+
+export interface NormsBulletItem {
+  label: string;
+  value: string;
+}
+
+export type NormsBlock =
+  | { type: 'paragraph'; text: string }
+  | { type: 'bullets'; items: NormsBulletItem[] }
+  | { type: 'table'; headers: string[]; rows: string[][] }
+  | { type: 'subheading'; text: string };
+
+export interface NormsLink {
+  label: string;
+  url: string;
+}
+
+export interface NormsSection {
+  number: string;
+  title: string;
+  blocks: NormsBlock[];
+  links: NormsLink[];
+}
+
+export interface ComplianceNorms {
+  document_title: string;
+  scraped_at: string | null;
+  source: string | null;
+  source_urls: string[];
+  sections: NormsSection[];
+}
+
+export interface ComplianceCheckPayload {
+  trade_type: 'export' | 'import';
+  partner_country: string;
+  product_category?: string;
+  hs_code?: string;
+  declared_value_usd: number;
+  shipping_bill_date?: string;
+}
+
+export interface TariffBreakdown {
+  standard_bcd_pct: number;
+  social_welfare_surcharge_pct: number;
+  igst_pct: number;
+  total_standard_duty_pct: number;
+  standard_duty_usd: number;
+  preferential_duty_pct: number;
+  preferential_duty_usd: number;
+  net_duty_savings_usd: number;
+  net_duty_savings_inr: number;
+}
+
+export interface ExportIncentives {
+  rodtep_rate_pct: number;
+  rodtep_rebate_usd: number;
+  rodtep_rebate_inr: number;
+  advance_authorisation_eligible: boolean;
+  epcg_eligible: boolean;
+  sion_reference: string;
+}
+
+export interface FemaCompliance {
+  statutory_rule: string;
+  days_elapsed: number;
+  days_remaining: number;
+  fema_status: string;
+  notice: string;
+  edpms_knockoff_pending: boolean;
+}
+
+export interface ComplianceCheckResult {
+  product_category: string;
+  hs_code: string;
+  trade_type: string;
+  partner_country: string;
+  matched_fta_country: string | null;
+  declared_value_usd: number;
+  shipping_bill_date: string | null;
+  policy_status: string;
+  is_restricted: boolean;
+  policy_alerts: string[];
+  tariff_breakdown: TariffBreakdown;
+  fta_details: FtaDetail | null;
+  export_incentives: ExportIncentives;
+  mandatory_documents: string[];
+  issuing_authorities: string[];
+  fema_compliance: FemaCompliance;
+  norms_metadata: { scraped_at: string | null; source: string | null };
+}
+

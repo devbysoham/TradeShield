@@ -7,7 +7,9 @@ import {
   SHIPMENTS_DATA,
   DOCUMENTS_DATA,
   FORWARD_CONTRACTS_DATA,
-  AUDIT_ACTIVITY_LOG
+  AUDIT_ACTIVITY_LOG,
+  COMPLIANCE_OVERVIEW,
+  COMPLIANCE_NORMS
 } from '../data/mockData';
 import { 
   Role, 
@@ -18,7 +20,11 @@ import {
   Shipment, 
   TradeDocument, 
   ForwardContract, 
-  AuditActivity 
+  AuditActivity,
+  ComplianceOverview,
+  ComplianceNorms,
+  ComplianceCheckPayload,
+  ComplianceCheckResult
 } from '../types';
 
 // Generic fetcher calling relative /api/* URLs (proxied to FastAPI via next.config.js rewrite)
@@ -160,5 +166,64 @@ export function useAuditActivity() {
     isError: error,
     mutate,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Trade Compliance Norms (DGFT / ICEGATE / FEMA / FTA)
+// ---------------------------------------------------------------------------
+
+export function useComplianceOverview() {
+  const { data, error, isLoading, mutate } = useSWR<ComplianceOverview>(
+    '/api/compliance/overview',
+    fetcher,
+    {
+      fallbackData: COMPLIANCE_OVERVIEW,
+      dedupingInterval: 30000,
+      revalidateOnFocus: false,
+      onErrorRetry: () => {}
+    }
+  );
+
+  return {
+    overview: data ?? COMPLIANCE_OVERVIEW,
+    isLoading,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useComplianceNorms() {
+  const { data, error, isLoading, mutate } = useSWR<ComplianceNorms>(
+    '/api/compliance/norms',
+    fetcher,
+    {
+      fallbackData: COMPLIANCE_NORMS,
+      dedupingInterval: 30000,
+      revalidateOnFocus: false,
+      onErrorRetry: () => {}
+    }
+  );
+
+  return {
+    norms: data ?? COMPLIANCE_NORMS,
+    isLoading,
+    isError: error,
+    mutate,
+  };
+}
+
+// POST-based compliance checker (FastAPI endpoint, mirrors backend schemas)
+export async function runComplianceCheck(
+  payload: ComplianceCheckPayload
+): Promise<ComplianceCheckResult> {
+  const res = await fetch('/api/compliance/check', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error(`Compliance check failed with status ${res.status}`);
+  }
+  return res.json();
 }
 

@@ -9,6 +9,7 @@ from app.schemas import (
     DocumentVerifyRequest,
     ContractIntegrityRequest,
     WorkspaceRequest,
+    ComplianceCheckRequest,
 )
 
 from app.services.currency import get_currency_forecast
@@ -20,6 +21,11 @@ from app.services.shipment import analyze_shipment
 from app.services.insurance import recommend_insurance
 from app.services.documents import register_document, verify_document
 from app.services.workspace import get_workspace
+from app.services.compliance import (
+    get_compliance_overview,
+    get_compliance_norms,
+    check_trade_compliance,
+)
 
 
 app = FastAPI()
@@ -114,3 +120,31 @@ def contract_integrity(request: ContractIntegrityRequest):
 @app.post("/workspace")
 def workspace(request: WorkspaceRequest):
     return get_workspace(request.role)
+
+
+# 9. Trade Compliance Norms (DGFT / ICEGATE / FEMA / FTA)
+# NOTE: The Next.js frontend proxies /api/* to FastAPI, so the canonical routes
+# carry the /api prefix; unprefixed aliases are kept for direct API access.
+@app.get("/api/compliance/overview")
+@app.get("/compliance/overview")
+def compliance_overview():
+    return get_compliance_overview()
+
+
+@app.get("/api/compliance/norms")
+@app.get("/compliance/norms")
+def compliance_norms():
+    return get_compliance_norms()
+
+
+@app.post("/api/compliance/check")
+@app.post("/compliance/check")
+def compliance_check(request: ComplianceCheckRequest):
+    return check_trade_compliance(
+        request.trade_type,
+        request.partner_country,
+        request.product_category,
+        request.hs_code,
+        request.declared_value_usd,
+        request.shipping_bill_date,
+    )

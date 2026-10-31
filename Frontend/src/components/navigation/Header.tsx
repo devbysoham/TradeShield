@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { name: 'Forecast', href: '/forex' },
   { name: 'Shipments', href: '/shipments' },
   { name: 'Documents', href: '/contracts' },
+  { name: 'Compliance', href: '/compliance' },
 ];
 
 export default function Header() {
