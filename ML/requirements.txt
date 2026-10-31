@@ -1,0 +1,34 @@
+# TradeShield ML Service — Python Dependencies
+# ──────────────────────────────────────────────
+# Install with: pip install -r requirements.txt
+# Development extras: pip install -r requirements-dev.txt
+
+# ── Web framework ──────────────────────────────────────────────────────────────
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+
+# ── Database ───────────────────────────────────────────────────────────────────
+sqlalchemy[asyncio]>=2.0.30
+asyncpg>=0.29.0
+alembic>=1.13.0
+
+# ── Data / ML ─────────────────────────────────────────────────────────────────
+pandas>=2.2.0
+numpy>=1.26.0
+scikit-learn>=1.5.0
+xgboost>=2.0.3
+
+# ── HTTP client (for feed fetching) ───────────────────────────────────────────
+httpx>=0.27.0
+
+# ── Scheduler ─────────────────────────────────────────────────────────────────
+apscheduler>=3.10.0
+
+# ── Config ────────────────────────────────────────────────────────────────────
+python-dotenv>=1.0.0
+
+# ── Caching / serialisation ───────────────────────────────────────────────────
+pyarrow>=16.0.0      # Parquet read/write via pandas
+joblib>=1.4.0        # model artefact serialisation

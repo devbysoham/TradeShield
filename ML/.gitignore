@@ -1,0 +1,37 @@
+# ─── Git ignore rules ─────────────────────────────────────────────────────────
+
+# Environment / secrets
+.env
+
+# Local Parquet / data cache (never commit raw market data)
+.cache/
+*.parquet
+*.csv
+*.json.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Models / artefacts (store in object storage, not git)
+app/models/artefacts/
+*.pkl
+*.joblib
+*.cbm
+
+# Test / coverage
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# IDE
+.idea/
+.vscode/
+*.swp
